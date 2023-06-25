@@ -20,12 +20,12 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish Jcs2BlazorWasmTestField.Client.csproj -p:GHPages=true -c:Release -o:publish
+        run: dotnet publish Jcs2BlazorWasmTestField\Jcs2BlazorWasmTestField.Client.csproj -p:GHPages=true -c:Release -o:publish
 
       # Deploy the site
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ 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 }}
-          publish_dir: publish/wwwroot
+          publish_dir: Jcs2BlazorWasmTestField\Client\bin\Release\net6.0\wwwroot
           force_orphan: true
