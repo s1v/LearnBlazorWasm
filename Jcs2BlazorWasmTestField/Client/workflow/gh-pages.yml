@@ -1,0 +1,31 @@
+﻿name: TestField
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v2
+
+      # Install .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.411
+
+      # Publish the site
+      - name: Publish
+        run: dotnet publish Jcs2BlazorWasmTestField.Client.csproj -p:GHPages=true -c:Release -o:publish
+
+      # Deploy the site
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ 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 }}
+          publish_dir: publish/wwwroot
+          force_orphan: true
