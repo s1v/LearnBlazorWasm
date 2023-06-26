@@ -26,6 +26,6 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ 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 }}
+          github_token: ${{ }}
           publish_dir: Jcs2BlazorWasmTestField\Client\bin\Release\net6.0\wwwroot
           force_orphan: true
