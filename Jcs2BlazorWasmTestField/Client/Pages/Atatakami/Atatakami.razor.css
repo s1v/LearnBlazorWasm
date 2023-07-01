@@ -5,7 +5,7 @@
 .atatakami-background-1 {
     perspective: 300px;
     overflow: hidden;
-    background: #000;
+    background: radial-gradient(#000, #07002d);
 }
 
     .atatakami-background-1::before {
