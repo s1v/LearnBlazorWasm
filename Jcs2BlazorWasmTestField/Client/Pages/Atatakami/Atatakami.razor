@@ -1,9 +1,10 @@
 ﻿@page "/atatakami"
 
 <div class="dot-container">
-    <div class="dot-frog"></div>
-    <div class="dot-frog"></div>
-    <div class="dot-frog"></div>
+    @for (int i = 0; i < 3; i++)
+    {
+        <div class="dot-frog"></div>
+    }
 </div>
 <div class="atatakami-background-0">
     <div class="atatakami-background-1">
