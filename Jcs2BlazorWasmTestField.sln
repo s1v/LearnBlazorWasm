@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jcs2BlazorWasmTestField.Server", "Jcs2BlazorWasmTestField\Server\Jcs2BlazorWasmTestField.Server.csproj", "{016C5773-DA6E-4A69-A2FD-28C2671DDD31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jcs2BlazorWasmTestField.Server", "Jcs2BlazorWasmTestField\Server\Jcs2BlazorWasmTestField.Server.csproj", "{016C5773-DA6E-4A69-A2FD-28C2671DDD31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jcs2BlazorWasmTestField.Client", "Jcs2BlazorWasmTestField\Client\Jcs2BlazorWasmTestField.Client.csproj", "{6F1DB97C-9ABC-495E-8C56-1802FA540737}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jcs2BlazorWasmTestField.Client", "Jcs2BlazorWasmTestField\Client\Jcs2BlazorWasmTestField.Client.csproj", "{6F1DB97C-9ABC-495E-8C56-1802FA540737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jcs2BlazorWasmTestField.Shared", "Jcs2BlazorWasmTestField\Shared\Jcs2BlazorWasmTestField.Shared.csproj", "{11847693-3A32-4B66-8A05-396C86D6C19A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jcs2BlazorWasmTestField.Shared", "Jcs2BlazorWasmTestField\Shared\Jcs2BlazorWasmTestField.Shared.csproj", "{11847693-3A32-4B66-8A05-396C86D6C19A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
