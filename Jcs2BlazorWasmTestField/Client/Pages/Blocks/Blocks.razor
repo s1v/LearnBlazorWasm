@@ -1,0 +1,76 @@
+﻿@page "/Blocks"
+
+<PageTitle>ブロックス</PageTitle>
+
+<h1>ブロックス</h1>
+<div>
+    <p style="color:rgba(@turnColor.R, @turnColor.G, @turnColor.B, @turnColor.A)">
+        @showInfo<br>
+    </p>
+    <p>
+        @showPlayerIngo
+    </p>
+</div>
+
+<div>
+    <button @onclick="SetInit">初期化</button>
+    <button @onclick="TurnChange">パス</button>
+</div>
+
+
+<body>
+    <h2>ボード</h2>
+    <div>
+        <table>
+            @for (int i = 0; i < square; i++)
+            {
+                <tr>
+                    @for (int j = 0; j < square; j++)
+                    {
+                        int row = i;
+                        int col = j;
+                        <td class="board"
+                            @onclick="() => ColorChange(row, col)"
+                            @onmouseover="() => OnMouseOver(row, col)"
+                            @onmouseout="OnMouseOut"
+                            style="background-color:rgba(@board[i, j].R, @board[i, j].G, @board[i, j].B, @board[i, j].A)">
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+    <br>
+    <div class="container">
+    @foreach (Peace peace in players[turn].RestPeaces)
+    {
+            <table style="margin:5px"
+                   @ondblclick="() => OnDblClick(peace)"
+                   @oncontextmenu:preventDefault="true"
+                   @oncontextmenu="() =>OnHandleRightClick(peace)">
+                @peace.Name
+            @for(int i = peace.MinRow; i <= peace.MaxRow; i++)
+            {
+                 <tr>
+                    @for(int j = peace.MinCol; j <= peace.MaxCol; j++)
+                    {
+                        @if(peace.Cells.Exists(cell => cell.Row == i && cell.Col == j))
+                        {
+                            <td class="containerCell"
+                                style="background-color:rgba(@turnColor.R, @turnColor.G, @turnColor.B, @turnColor.A)"
+                                @onclick="() => PeaceSelected(peace)"></td>
+                        }
+                        else
+                        {
+                            <td class="containerNoCell"></td>
+                        }
+
+                    }
+                </tr>
+            }
+        </table>
+    }
+    </div>
+    <br>
+    <div>ダブルクリック：右回転　右クリック：反転</div>
+</body>

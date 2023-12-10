@@ -1,0 +1,25 @@
+﻿td.board{
+    border:solid;
+    border-color:black;
+    height:50px;
+    width:50px;
+}
+
+td.containerCell{
+    border: solid;
+    border-color:black;
+    height: 25px;
+    width: 25px;
+}
+
+td.containerNoCell {
+    border: none;
+    height: 25px;
+    width: 25px;
+}
+
+div.container{
+    display:flex;
+    align-items:flex-start;
+    flex-wrap:wrap;
+}
