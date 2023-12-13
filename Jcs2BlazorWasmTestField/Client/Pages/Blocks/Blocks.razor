@@ -44,11 +44,12 @@
     <div class="container">
     @foreach (Peace peace in players[turn].RestPeaces)
     {
-            <table style="margin:5px"
-                   @ondblclick="() => OnDblClick(peace)"
-                   @oncontextmenu:preventDefault="true"
-                   @oncontextmenu="() =>OnHandleRightClick(peace)">
-                @peace.Name
+        SetPeaceColor(new Peace(peace.Name));
+        <table style="margin:5px; @GetColorStyle(peace)"
+                @ondblclick="() => OnDblClick(peace)"
+                @oncontextmenu:preventDefault="true"
+                @oncontextmenu="() =>OnHandleRightClick(peace)">
+            @peace.Name
             @for(int i = peace.MinRow; i <= peace.MaxRow; i++)
             {
                  <tr>
@@ -57,7 +58,7 @@
                         @if(peace.Cells.Exists(cell => cell.Row == i && cell.Col == j))
                         {
                             <td class="containerCell"
-                                style="background-color:rgba(@turnColor.R, @turnColor.G, @turnColor.B, @turnColor.A)"
+                                    style="background-color:rgba(@peace.PeaceColor.R, @peace.PeaceColor.G, @peace.PeaceColor.B, @peace.PeaceColor.A)"
                                 @onclick="() => PeaceSelected(peace)"></td>
                         }
                         else

@@ -1,4 +1,6 @@
-﻿namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
+﻿using System.Drawing;
+
+namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
 {
     /// <summary>
     /// コマ
@@ -19,6 +21,8 @@
         /// 割付済み
         /// </summary>
         public bool IsPlaced { get; set; }
+
+        public Color PeaceColor { get; set; }
 
         /// <summary>
         /// セル行の最大値
@@ -67,16 +71,16 @@
                     // □
                     // ■
                     // □
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(1, 0));
                     break;
 
                 case "d":
                     // □
                     // ■□
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 1));
                     break;
 
@@ -85,8 +89,8 @@
                     // ■
                     // □
                     // □
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(1, 0));
                     Cells.Add(new Cell(2, 0));
                     break;
@@ -95,8 +99,8 @@
                     // 　□
                     // 　■
                     // □□
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(1, -1));
                     Cells.Add(new Cell(1, 0));
                     break;
@@ -105,8 +109,8 @@
                     // □
                     // ■□
                     // □
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(1, 0));
                     break;
@@ -123,8 +127,8 @@
                 case "i":
                     // □■
                     // 　□□
-                    Cells.Add(new Cell(0, -1));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(0, -1));
                     Cells.Add(new Cell(1, 0));
                     Cells.Add(new Cell(1, 1));
                     break;
@@ -135,9 +139,9 @@
                     // ■
                     // □
                     // □
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-2, 0));
                     Cells.Add(new Cell(-1, 0));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(1, 0));
                     Cells.Add(new Cell(2, 0));
                     break;
@@ -147,8 +151,8 @@
                     // 　■
                     // 　□
                     // □□
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(1, 0));
                     Cells.Add(new Cell(2, -1));
                     Cells.Add(new Cell(2, 0));
@@ -159,10 +163,10 @@
                     // 　□
                     // □■
                     // □
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-2, 0));
                     Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, -1));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(1, -1));
                     break;
 
@@ -170,9 +174,9 @@
                     // 　□
                     // □■
                     // □□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, -1));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(1, -1));
                     Cells.Add(new Cell(1, 0));
                     break;
@@ -181,9 +185,9 @@
                     // □□
                     // 　■
                     // □□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-1, -1));
                     Cells.Add(new Cell(-1, 0));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(1, -1));
                     Cells.Add(new Cell(1, 0));
                     break;
@@ -193,8 +197,8 @@
                     // ■□
                     // □
                     // □
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(1, 0));
                     Cells.Add(new Cell(2, 0));
@@ -204,8 +208,8 @@
                     // 　□
                     // 　■
                     // □□□
-                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, 0));
+                    Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(1, -1));
                     Cells.Add(new Cell(1, 0));
                     Cells.Add(new Cell(1, 1));
@@ -215,9 +219,9 @@
                     // □
                     // □
                     // ■□□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-2, 0));
                     Cells.Add(new Cell(-1, 0));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(0, 2));
                     break;
@@ -226,9 +230,9 @@
                     // □□
                     // 　■□
                     // 　　□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-1, -1));
                     Cells.Add(new Cell(-1, 0));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(1, 1));
                     break;
@@ -237,9 +241,9 @@
                     // □
                     // □■□
                     // 　　□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-1, -1));
                     Cells.Add(new Cell(0, -1));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(1, 1));
                     break;
@@ -248,9 +252,9 @@
                     // □
                     // □■□
                     // 　□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-1, -1));
                     Cells.Add(new Cell(0, -1));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(1, 0));
                     break;
@@ -259,14 +263,15 @@
                     // 　□
                     // □■□
                     // 　□
+                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(-1, 0));
                     Cells.Add(new Cell(0, -1));
-                    Cells.Add(new Cell(0, 0));
                     Cells.Add(new Cell(0, 1));
                     Cells.Add(new Cell(1, 0));
                     break;
             }
         }
+
 
         /// <summary>
         /// 右90度回転
@@ -284,7 +289,7 @@
         }
 
         /// <summary>
-        /// 反転
+        /// 左右反転
         /// </summary>
         public Peace Inversion()
         {
@@ -293,6 +298,23 @@
             for (int len = 0; len < Cells.Count; len++)
             {
                 cells.Add(new Cell(Cells[len].Row, Cells[len].Col * -1));
+            }
+            this.Cells = cells;
+            return this;
+        }
+
+        /// <summary>
+        /// 座標移動
+        /// </summary>
+        public Peace MovePoint(int num = 0)
+        {
+            // セル構成の組み換え
+            List<Cell> myCells = new Peace(this.Name).Cells; // 初期配置を設定
+            List<Cell> cells = new();
+            Cell startCell = myCells[num];
+            foreach (Cell cell in myCells)
+            {
+                cells.Add(new Cell(cell.Row - startCell.Row, cell.Col - startCell.Col));
             }
             this.Cells = cells;
             return this;

@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Runtime.ConstrainedExecution;
 
 namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
 {
@@ -79,7 +80,9 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
             // 手番を初期化
             turn = 0;
             turnColor = players[turn].Color;
-            turnLightColor = Color.FromArgb(turnColor.A, turnColor.R / 2, turnColor.G / 2, turnColor.B / 2);
+            turnLightColor = BrightColor(turnColor, 0.5);
+            // 対象ピースを初期化
+            targetPeace = new("");
         }
 
         /// <summary>
@@ -89,12 +92,12 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
         /// <param name="col"></param>
         private void ColorChange(int row, int col)
         {
-            if (targetPeace.Name is not null && targetPeace.Name != "" && CheckPut(row, col))
+            if (targetPeace.Name is not null && targetPeace.Name != "" && CheckPut(row, col, targetPeace))
             {
                 // 対象セルを塗り替え
                 foreach (Cell cell in targetPeace.Cells)
                 {
-                    board[row + cell.Row, col + cell.Col] = players[turn].Color;
+                    board[row + cell.Row, col + cell.Col] = turnColor;
                 }
                 Console.WriteLine($"Row:{row}, Col:{col}");
 
@@ -111,7 +114,7 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
         }
 
         /// <summary>
-        /// 対象セルの色を薄く変更します
+        /// マウスを被せた時のイベント
         /// </summary>
         /// <param name="row">行</param>
         /// <param name="col">列</param>
@@ -119,14 +122,23 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
         {
             try
             {
-                if (targetPeace.Name is not null && targetPeace.Name != "" && CheckPut(row, col))
+                if (targetPeace.Name is not null && targetPeace.Name != "")
                 {
+                    Color drawingColor;
+                    if (CheckPut(row, col, targetPeace))
+                    {
+                        drawingColor = turnColor;
+                    }
+                    else
+                    {
+                        drawingColor = turnLightColor;
+                    }
                     // 対象セルを塗り替え
                     foreach (Cell cell in targetPeace.Cells)
                     {
                         if (board[row + cell.Row, col + cell.Col] == Color.White)
                         {
-                            board[row + cell.Row, col + cell.Col] = turnLightColor;
+                            board[row + cell.Row, col + cell.Col] = drawingColor;
                             changedCell.Add(new Cell(row + cell.Row, col + cell.Col));
                         }
                     }
@@ -134,18 +146,27 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
             }
             catch
             {
+                ClearChangedCell();
                 Console.WriteLine($"OnMouseOver row:{row} col:{col}");
             }
         }
 
         /// <summary>
-        /// 対象セルの色を薄く変更します
+        /// マウスを離した時のイベント
         /// </summary>
         /// <param name="row">行</param>
         /// <param name="col">列</param>
         private void OnMouseOut()
         {
-            foreach(Cell cell in changedCell)
+            ClearChangedCell();
+        }
+
+        /// <summary>
+        /// 一時的に変更していた色を白に戻す
+        /// </summary>
+        public void ClearChangedCell()
+        {
+            foreach (Cell cell in changedCell)
             {
                 board[cell.Row, cell.Col] = Color.White;
             }
@@ -153,15 +174,20 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
         }
 
         /// <summary>
-        /// 対象セルにピースを配置可能かチェックします
+        /// 対象セルにピースを向きを変えずに配置可能かチェックします
         /// </summary>
+        /// <param name="i">行</param>
+        /// <param name="j">列</param>
+        /// <param name="peace">チェック対象のピース</param>
         /// <returns>true:配置可能 false:配置不可</returns>
-        private bool CheckPut(int i, int j)
+        private bool CheckPut(int i, int j, Peace peace)
         {
             try
             {
+                OnMouseOut();
+
                 bool checkPut = false;
-                foreach(Cell cell in targetPeace.Cells)
+                foreach(Cell cell in peace.Cells)
                 {
                     // セルの行列を保持
                     int row = i + cell.Row;
@@ -170,6 +196,7 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
                     // 各セルの違反チェック
                     // 対象セルが塗られていないかチェック
                     if (board[row, col] != Color.White &&
+                        board[row, col] != turnColor &&
                         board[row, col] != turnLightColor)
                     {
                         return false;
@@ -178,25 +205,25 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
                     // 対象セルの上下左右に同色が塗られていないかチェック
                     // 上
                     if (WithinRange(row - 1) &&
-                        board[row - 1, col] == players[turn].Color)
+                        board[row - 1, col] == turnColor)
                     {
                         return false;
                     }
                     // 下
                     if (WithinRange(row + 1) &&
-                        board[row + 1, col] == players[turn].Color)
+                        board[row + 1, col] == turnColor)
                     {
                         return false;
                     }
                     // 左
                     if (WithinRange(col - 1) &&
-                        board[row, col - 1] == players[turn].Color)
+                        board[row, col - 1] == turnColor)
                     {
                         return false;
                     }
                     // 右
                     if (WithinRange(col + 1) && 
-                        board[row, col + 1] == players[turn].Color)
+                        board[row, col + 1] == turnColor)
                     {
                         return false;
                     }
@@ -223,13 +250,13 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
                     {
                         // 初手以外の場合、対象セルの斜めに同色が塗ってあるかチェック
                         if ((WithinRange(row - 1) && WithinRange(col - 1) &&
-                            board[row - 1, col - 1] == players[turn].Color) ||
+                            board[row - 1, col - 1] == turnColor) ||
                             (WithinRange(row - 1) && WithinRange(col + 1) &&
-                            board[row - 1, col + 1] == players[turn].Color) ||
+                            board[row - 1, col + 1] == turnColor) ||
                             (WithinRange(row + 1) && WithinRange(col - 1) &&
-                            board[row + 1, col - 1] == players[turn].Color) ||
+                            board[row + 1, col - 1] == turnColor) ||
                             (WithinRange(row + 1) && WithinRange(col + 1) &&
-                            board[row + 1, col + 1] == players[turn].Color))
+                            board[row + 1, col + 1] == turnColor))
                         {
                             checkPut = true;
                         }
@@ -242,6 +269,71 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 対象セルにピースを配置可能かチェックします
+        /// </summary>
+        /// <param name="i">行</param>
+        /// <param name="j">列</param>
+        /// <param name="peace">チェック対象のピース</param>
+        /// <returns>true:配置可能 false:配置不可</returns>
+        private bool CheckPutAllDirection(int i, int j, Peace peace)
+        {
+            try
+            {
+                Peace originalPeace = peace;
+
+                for (int k = 0; k < peace.Cells.Count; k++)
+                {
+                    // 座標を移動してチェック
+                    originalPeace = originalPeace.MovePoint(k);
+
+                    for(int l = 0; l < 2; l++)
+                    {
+                        // 左右反転してチェック
+                        originalPeace = originalPeace.Inversion();
+                        
+                        for (int m = 0; m < 4; m++)
+                        {
+                            // 右90度回転してチェック
+                            originalPeace = originalPeace.RotationRight();
+
+                            if (CheckPut(i, j, originalPeace))
+                            {
+                                return true;
+                            }
+
+                        }
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 対象ピースを配置可能な場所があるかどうかをチェックします
+        /// </summary>
+        /// <param name="peace">チェック対象のピース（newで宣言）</param>
+        /// <returns>true:配置可能 false:配置不可</returns>
+        public bool ExistCanPutPlace(Peace peace)
+        {
+            List<Cell> cells = CanPutCellls();
+
+            foreach (Cell cell in cells)
+            {
+                if ((board[cell.Row, cell.Col] == Color.White || board[cell.Row, cell.Col] == turnLightColor) &&
+                CheckPutAllDirection(cell.Row, cell.Col, peace))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -259,7 +351,7 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
             }
 
             turnColor = players[turn].Color;
-            turnLightColor = Color.FromArgb(turnColor.A, turnColor.R / 2, turnColor.G / 2, turnColor.B / 2);
+            turnLightColor = BrightColor(turnColor, 0.5);
 
             targetPeace = new Peace("");
             changedCell.Clear();
@@ -302,6 +394,10 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
             players[turn].Peaces[idx] = targetPeace.RotationRight();
         }
 
+        /// <summary>
+        ///  右クリック時のイベント
+        /// </summary>
+        /// <param name="peace"></param>
         private void OnHandleRightClick(Peace peace)
         {
             // 右クリックしただけではtargetPeaceが設定されないため指定
@@ -311,6 +407,64 @@ namespace Jcs2BlazorWasmTestField.Client.Pages.Blocks
             // 対象セルを反転させる
             int idx = players[turn].Peaces.FindIndex(peace => peace.Name == targetPeace.Name);
             players[turn].Peaces[idx] = targetPeace.Inversion();
+        }
+
+        /// <summary>
+        /// 対象ピースとして選ばれている場合、文字色を赤くする
+        /// </summary>
+        /// <param name="peace"></param>
+        /// <returns></returns>
+        public string GetColorStyle(Peace peace)
+        {
+            return peace.Name == targetPeace.Name ? "color: red;" : "color: black;";
+        }
+
+        /// <summary>
+        /// ピースの背景色を設定する
+        /// </summary>
+        /// <param name="peace">配置可能な場合：プレイヤー色　配置不可な場合：グレー</param>
+        public void SetPeaceColor(Peace peace)
+        {
+            players[turn].Peaces.Where(item => item.Name == peace.Name).First().PeaceColor = ExistCanPutPlace(peace) ? turnColor : Color.Gray;
+            Console.WriteLine($"Peace.Color:{peace.PeaceColor}");
+        }
+
+        /// <summary>
+        /// ピースを配置可能な可能性があるマスのリストを作成
+        /// </summary>
+        /// <returns></returns>
+        public List<Cell> CanPutCellls()
+        {
+            List<Cell> cells = new();
+
+            // 1マスのピースでチェック
+            Peace peace = new("a");
+
+            for(int i = 0; i < square; i++){
+                for(int j = 0; j < square; j++)
+                {
+                    if(CheckPut(i, j, peace)){
+                        cells.Add(new Cell(i, j));
+                    }
+                }
+            }
+
+            return cells;
+        }
+
+        /// <summary>
+        /// 色を薄くします。
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="lightenAmount">0から1を指定。1に近いほど薄くなります。</param>
+        /// <returns></returns>
+        public static Color BrightColor(Color color, double lightenAmount)
+        {
+            return Color.FromArgb(
+                (int)((1 - lightenAmount) * color.R + lightenAmount * 255),
+                (int)((1 - lightenAmount) * color.G + lightenAmount * 255),
+                (int)((1 - lightenAmount) * color.B + lightenAmount * 255)
+            );
         }
     }
 
